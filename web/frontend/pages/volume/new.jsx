@@ -24,14 +24,13 @@ import {
   Stack,
   PageActions,
 } from "@shopify/polaris";
-
+import { data } from "@shopify/app-bridge/actions/Modal";
 import { useAuthenticatedFetch } from "../../hooks";
 
 const todaysDate = new Date();
-const METAFIELD_NAMESPACE = "YOUR_NAMESPACE";
+const METAFIELD_NAMESPACE = "FUNCTION_APP";
 const METAFIELD_CONFIGURATION_KEY = "volume-config";
-// REPLACE THE LINE BELOW WITH THE ID OF YOUR FUNCTION
-const FUNCTION_ID = "YOUR_VOLUME_FUNCTION_ID";
+const FUNCTION_ID = "YOUR_FUNCTION_ID";
 
 export default function VolumeNew() {
   const app = useAppBridge();
@@ -77,10 +76,10 @@ export default function VolumeNew() {
       usageOncePerCustomer: useField(false),
       startDate: useField(todaysDate),
       endDate: useField(null),
-      configuration: { // Add quantity and percentage configuration
-        quantity: useField('1'),
-        percentage: useField('0'),
-      }
+      configuration: {
+        quantity: useField("1"),
+        percentage: useField("0"),
+      },
     },
     onSubmit: async (form) => {
       const discount = {
@@ -94,9 +93,9 @@ export default function VolumeNew() {
             key: METAFIELD_CONFIGURATION_KEY,
             type: "json",
             value: JSON.stringify({
-                quantity: parseInt(form.configuration.quantity),
-                percentage: parseFloat(form.configuration.percentage),
-              }),      
+              quantity: parseInt(form.configuration.quantity),
+              percentage: parseFloat(form.configuration.percentage),
+            }),
           },
         ],
       };
@@ -106,16 +105,23 @@ export default function VolumeNew() {
         response = await authenticatedFetch("/api/discounts/automatic", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...discount, title: form.discountTitle }),
+          body: JSON.stringify({
+            discount: {
+              ...discount,
+              title: form.discountTitle,
+            },
+          }),
         });
       } else {
         response = await authenticatedFetch("/api/discounts/code", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            ...discount,
-            title: form.discountCode,
-            code: form.discountCode,
+            discount: {
+              ...discount,
+              title: form.discountCode,
+              code: form.discountCode,
+            },
           }),
         });
       }
@@ -179,12 +185,19 @@ export default function VolumeNew() {
               discountMethod={discountMethod}
             />
             <Card title="Volume">
-            <Card.Section>
+              <Card.Section>
                 <Stack>
-                <TextField label="Minimum quantity" {...configuration.quantity} />
-                <TextField label="Discount percentage" {...configuration.percentage} suffix="%" />
+                  <TextField
+                    label="Minimum quantity"
+                    {...configuration.quantity}
+                  />
+                  <TextField
+                    label="Discount percentage"
+                    {...configuration.percentage}
+                    suffix="%"
+                  />
                 </Stack>
-            </Card.Section>
+              </Card.Section>
             </Card>
             {discountMethod.value === DiscountMethod.Code && (
               <UsageLimitsCard
