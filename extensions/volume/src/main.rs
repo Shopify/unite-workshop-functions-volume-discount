@@ -51,7 +51,6 @@ fn function(input: input::Input) -> Result<FunctionResult, Box<dyn std::error::E
 }
 
 #[cfg(test)]
-
 mod tests {
     use super::*;
 

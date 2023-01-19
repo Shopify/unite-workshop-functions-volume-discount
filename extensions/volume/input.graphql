@@ -10,7 +10,7 @@ query Input {
     }
   }
   discountNode {
-    metafield(namespace: "YOUR_NAMESPACE", key: "volume-config") {
+    metafield(namespace: "FUNCTION_APP", key: "volume-config") {
       value
     }
   }
