@@ -1,3 +1,5 @@
+> **This repository is no longer maintained.** It has been archived and receives no updates or security fixes.
+
 # Shopify Unite '22 Use Rust to create a Shopify Discount Function
 
 Hello and welcome to the [**Use Rust to create a Shopify Discount Function** workshop](https://shopify.github.io/workshops/codelabs/functions-volume-discount/index.html?index=./workshops#0) for Shopify Unite '22.
